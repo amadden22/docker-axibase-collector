@@ -33,12 +33,15 @@ COPY entrypoint.sh preinit.sh /tmp/
 COPY help.1 /
 COPY licenses /licenses
 
-#install jdk, wget, unzip, nano, iproute
-RUN REPOLIST=rhel-7-server-rpms \
-    yum-config-manager --disable rhel-7-server-htb-rpms &&\
-    yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical --setopt=tsflags=nodocs \
-    && yum -y install --disablerepo "*" --enablerepo ${REPOLIST} postfix java-1.8.0-openjdk wget unzip nano iproute \
-    && yum clean all
+### Add necessary Red Hat repos here
+RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms \
+### Add your package needs here
+    INSTALL_PKGS="postfix java-1.8.0-openjdk wget unzip nano iproute" && \
+    yum -y update-minimal --disablerepo "*" --enablerepo rhel-7-server-rpms --setopt=tsflags=nodocs \
+      --security --sec-severity=Important --sec-severity=Critical && \
+    yum -y install --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs ${INSTALL_PKGS} && \
+    yum clean all
+
 #install collector
 RUN wget https://www.axibase.com/public/axibase-collector-v${version}.tar.gz \
     && tar -xzvf axibase-collector-*.tar.gz -C /opt/ && rm axibase-collector-*.tar.gz
