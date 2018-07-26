@@ -33,9 +33,8 @@ COPY entrypoint.sh preinit.sh /tmp/
 COPY help.1 /
 COPY licenses /licenses
 
-### Add necessary Red Hat repos here
+###install jdk, wget, unzip, nano, iproute
 RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms \
-### Add your package needs here
     INSTALL_PKGS="postfix java-1.8.0-openjdk wget unzip nano iproute" && \
     yum -y update-minimal --disablerepo "*" --enablerepo rhel-7-server-rpms --setopt=tsflags=nodocs \
       --security --sec-severity=Important --sec-severity=Critical && \
