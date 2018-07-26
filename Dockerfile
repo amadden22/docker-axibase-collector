@@ -34,7 +34,9 @@ COPY help.1 /
 COPY licenses /licenses
 
 #install jdk, wget, unzip, nano, iproute
-RUN REPOLIST=rhel-7-server-rpms &&\
+RUN 
+    REPOLIST=rhel-7-server-rpms &&\
+    yum-config-manager --disable rhel-7-server-htb-rpms &&\
     yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical --setopt=tsflags=nodocs \
     && yum -y install --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs postfix java-1.8.0-openjdk wget unzip nano iproute \
     && yum clean all
